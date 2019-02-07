@@ -11,18 +11,20 @@ finnish_words_file = open("finnish_words.txt")
 common_passwords_file = open("common_passwords.txt")
 output_file = open("output_file.txt", "a")
 common_english_words_file = open("english_words.txt")
+lastnames_file = open("lastnames.txt")
 
 alphabet = string.ascii_lowercase
 firstnames_list = firstnames_file.read().splitlines()
+lastnames_list = lastnames_file.read().splitlines()
 finnish_words_file = finnish_words_file.read().splitlines()
 common_passwords_list = common_passwords_file.read().splitlines()
 common_english_words_list = common_english_words_file.read().splitlines()
 
 def phising_1(userid, email, password):
     print("Sending a form with the following info: userid %s, email %s, password %s" % (userid, email, password))
-    url = 'https://haaga-hel1a-helpdesk.weebly.com/ajax/apps/formSubmitAjax.php'
-    data = {"_u697771171613901263": userid, "_u770510225617309293": email, "_u347286333246038102": password,
-            "ucfid": 407087612984639270}
+    url = 'https://haaga-helia-desk.weebly.com//ajax/apps/formSubmitAjax.php'
+    data = {"_u768032520541082005": userid, "_u894627795127593335": email, "_u125213772223352816": password,
+            "ucfid": 123374606509319342}
     r = requests.post(url, data=data)
     html_response = r.text
     soup = BeautifulSoup(html_response)
@@ -32,6 +34,7 @@ def phising_1(userid, email, password):
         return
     if response_json.get('success'):
         print('Succesfully sent fake form data')
+        output_file.write("%s   %s  %s  %s\n" % (userid, email, password, datetime.datetime.now()))
     else:
         print('Failed to send form data: ', response_json)
 
@@ -53,23 +56,42 @@ def phising_2(userid, email, password):
         print('Failed to send form data: ', response_json)
 
 
+def phising_3(firstname, lastname, userid, email, password):
+    print("Sending a form with the following info: firstname %s, lastname %s, userid %s, email %s, password %s" % (firstname, lastname, userid, email, password))
+    return
+    url = 'https://haaga-helia.weebly.com/ajax/apps/formSubmitAjax.php'
+    data = {"_u581711145251090073[first]": firstname, "_u581711145251090073[last]": lastname, "u889022183156699632": email, "_u544484960623491938": password, "_u284261734227315756": password, "ucfid":361303802676750299}
+    r = requests.post(url, data=data)
+    html_response = r.text
+    soup = BeautifulSoup(html_response)
+    response_json = json.loads(soup.find(id="response").text)
+    if not response_json:
+        print("No response div found")
+        return
+    if response_json.get('success'):
+        print('Succesfully sent fake form data')
+        output_file.write("%s   %s  %s  %s\n" % (userid, email, password, datetime.datetime.now()))
+    else:
+        print('Failed to send form data: ', response_json)
+
+
 def handle_name(firstname):
+    random_number = random.randrange(0,15)
     firstname = firstname.lower()
     firstname = firstname.replace('ö','o').replace('ä','a').replace('å','o')
-    if random.randrange(0,10) == 1:
+    if random_number > 6:
         return firstname.title()
     else:
-        return firstname.upper()
+        return firstname
 
 
-def get_password():
-    random_number = random.randrange(0,15)
+def get_password(name):
+    random_number = random.randrange(0,19)
     random_symbols = ["!","?","@", "§", "$"]
     if random_number == 1:
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(random.randrange(8,20))) # Generates a password with random letters, varying between 9 and 19 characters in length
     if random_number in [2,3]: #Generates a password that is firstname with first letter capitalized + random sequence of 2 digits + a random symbol
-        firstname = get_firstname()
-        return firstname.title() + str(random.randrange(10,20)) + random.choice(random_symbols)
+        return name.title() + str(random.randrange(10,20)) + random.choice(random_symbols)
     if random_number in [4,5]: # chooses a random password from the most common passwords list
         return random.choice(finnish_words_file).title() + random.choice(random_symbols)
     if random_number in [6,7]: # Chooses a password from the common passwords -list
@@ -78,14 +100,28 @@ def get_password():
         else:
             return random.choice(common_passwords_list) # Only a random word from the common passwords list will be chosen
     if random_number == 8: # A combination of firstname with first letter capitalized + two digits
-        firstname = get_firstname()
-        return random.choice(common_passwords_list) + firstname.title() + str(random.randrange(10,20))
+        return random.choice(common_passwords_list) + name.title() + str(random.randrange(10,20))
     if random_number == 9: # A random finnish word + 2 to 3 digits
-        return random.choice(finnish_words_file) + str(random.randrange(10,200))
+        return random.choice(finnish_words_file) + random.choice(random_symbols) + str(random.randrange(10,200))
     if random_number == 10: # A random english word with first letter capitalized + 2 or 3 digits
-        return random.choice(common_english_words_list).title() + str(random.randrange(10,200))
-    if random_number == 11: # A random english word without first letter capitalized + 2 or 3 digits
+        return random.choice(common_english_words_list).title() + str(random.randrange(10,200)) + random.choice(random_symbols)
+    if random_number == 11: # name with one letter replaced + two to three random digits + a random symbol
+        letter_to_replace = name[random.randrange(0, len(name))]
+        return name.replace(letter_to_replace, letter_to_replace.upper()) + str(random.randrange(10,200)) + random.choice(random_symbols)
+    if random_number == 12: # A random english word without first letter capitalized + 2 or 3 digits
         return random.choice(common_english_words_list) + str(random.randrange(10,200))
+    if random_number == 13: # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+        letter_to_replace = name[random.randrange(0, len(name))]
+        return name.replace(letter_to_replace, letter_to_replace.upper() + random.choice(random_symbols)) + str(random.randrange(10,200))
+    if random_number == 14:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+        letter_to_replace = name[random.randrange(0, len(name))]
+        return name.replace(letter_to_replace, random.choice(random_symbols) + random.choice(random_symbols)) + str(random.randrange(10, 200))
+    if random_number == 15:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+        letter_to_replace = name[random.randrange(0, len(name))]
+        return random.choice(common_english_words_list) + random.choice(common_english_words_list) + random.choice(random_symbols)
+    if random_number == 16:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+        letter_to_replace = name[random.randrange(0, len(name))]
+        return random.choice(common_english_words_list) + random.choice(finnish_words_file).upper() + random.choice(random_symbols)
     else: # A random finnish word with first letter capitalized + 2 or 3 digits
         return random.choice(finnish_words_file).title() + str(random.randrange(10,200))
 
@@ -97,18 +133,31 @@ def get_firstname():
     random_firstname = random.choice(firstnames_list)
     return handle_name(random_firstname)
 
+def get_lastname():
+    random_lastname = random.choice(lastnames_list)
+    return handle_name(random_lastname)
+
 def get_domain():
-    return random.choices(population=['myy.haaga-helia.fi', 'haaga-helia.fi', 'haag-helia.fi', 'haagahelia.fi',
-                                      'myyhaaga-helia.fi', 'haaga-helia.net', 'myy.haaga-helia.net', 'gmail.com', 'live.fi'], weights=[60, 20, 5, 5, 5, 5, 10,10,5],k=1)[0]
+    return random.choices(population=['myy.haaga-helia.fi', 'Myy.haaga-helia.fi', 'myy.Haaga-Helia.fi', 'haaga-helia.fi', 'haag-helia.fi', 'haagahelia.fi',
+                                      'myyhaaga-helia.fi', 'haaga-helia.net', 'myy.haaga-helia.net', 'gmail.com', 'live.fi'], weights=[60, 50, 30, 20, 5, 5, 5, 5, 10,10,5],k=1)[0]
+
+def get_email(username, domain):
+    number = random.randrange(0,10)
+    if number > 5:
+        if username[0] == 'A':
+            username = username.replace('A','a')
+        else:
+            username = username.replace('a', 'A')
+    return ("%s@%s" % (username, domain))
 
 
 def main():
-    password = get_password()
+    firstname, lastname = get_firstname(), get_lastname()
+    password = get_password(random.choice([firstname, lastname]))
     random_domain = get_domain()
     username = get_username()
-    email = ("%s@%s" % (username, random_domain))
-    phising_2(username, email, password)
-    time.sleep(0.05)
+    email = get_email(username, random_domain)
+    phising_1(username, email, password)
 
 while True:
     main()
