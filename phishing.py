@@ -6,12 +6,12 @@ import string
 import time
 import datetime
 
-firstnames_file = open("firstnames.txt")
-finnish_words_file = open("finnish_words.txt")
-common_passwords_file = open("common_passwords.txt")
-output_file = open("output_file.txt", "a")
-common_english_words_file = open("english_words.txt")
-lastnames_file = open("lastnames.txt")
+firstnames_file = open("firstnames.txt",encoding="utf8", errors='ignore')
+finnish_words_file = open("finnish_words.txt",encoding="utf8", errors='ignore')
+common_passwords_file = open("common_passwords.txt",encoding="utf8", errors='ignore')
+output_file = open("output_file.txt", "a",encoding="utf8", errors='ignore')
+common_english_words_file = open("english_words.txt",encoding="utf8", errors='ignore')
+lastnames_file = open("lastnames.txt",encoding="utf8", errors='ignore')
 
 alphabet = string.ascii_lowercase
 firstnames_list = firstnames_file.read().splitlines()
