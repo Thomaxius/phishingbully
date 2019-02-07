@@ -158,7 +158,7 @@ def main():
     username = get_username()
     email = get_email(username, random_domain)
     phising_1(username, email, password)
-    time.sleep(0.1)
+    time.sleep(0.3)
 
 while True:
     main()
