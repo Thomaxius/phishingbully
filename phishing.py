@@ -23,7 +23,7 @@ common_english_words_list = common_english_words_file.read().splitlines()
 def phising_1(userid, email, password):
     print("Sending a form with the following info: userid %s, email %s, password %s" % (userid, email, password))
     url = 'https://haaga-helia-desk.weebly.com//ajax/apps/formSubmitAjax.php'
-    data = {"_u768032520541082005": userid, "_u894627795127593335": email, "_u125213772223352816": password,
+    data = {"_u768032520541082005": email, "_u894627795127593335": userid, "_u125213772223352816": password,
             "ucfid": 123374606509319342}
     r = requests.post(url, data=data)
     html_response = r.text
@@ -158,7 +158,7 @@ def main():
     username = get_username()
     email = get_email(username, random_domain)
     phising_1(username, email, password)
-    time.sleep(0.3)
+    time.sleep(0.1)
 
 while True:
     main()
