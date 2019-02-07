@@ -127,7 +127,7 @@ def get_password(name):
 
 def get_username():
     first_letter = random.choice(["a","A"])
-    return first_letter + "1" + random.choice(["6","7"]) + str(random.randrange(10000,20000))
+    return first_letter + "1" + random.choice(["6","7"]) + "04" + str(random.randrange(100,999))
 
 def get_firstname():
     random_firstname = random.choice(firstnames_list)
