@@ -58,7 +58,6 @@ def phising_2(userid, email, password):
 
 def phising_3(firstname, lastname, userid, email, password):
     print("Sending a form with the following info: firstname %s, lastname %s, userid %s, email %s, password %s" % (firstname, lastname, userid, email, password))
-    return
     url = 'https://haaga-helia.weebly.com/ajax/apps/formSubmitAjax.php'
     data = {"_u581711145251090073[first]": firstname, "_u581711145251090073[last]": lastname, "u889022183156699632": email, "_u544484960623491938": password, "_u284261734227315756": password, "ucfid":361303802676750299}
     r = requests.post(url, data=data)
@@ -90,37 +89,35 @@ def get_password(name):
     random_symbols = ["!","?","@", "§", "$"]
     if random_number == 1:
         return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(random.randrange(8,20))) # Generates a password with random letters, varying between 9 and 19 characters in length
-    if random_number in [2,3]: #Generates a password that is firstname with first letter capitalized + random sequence of 2 digits + a random symbol
+    elif random_number in [2,3]: #Generates a password that is firstname with first letter capitalized + random sequence of 2 digits + a random symbol
         return name.title() + str(random.randrange(10,20)) + random.choice(random_symbols)
-    if random_number in [4,5]: # chooses a random password from the most common passwords list
+    elif random_number in [4,5]: # chooses a random password from the most common passwords list
         return random.choice(finnish_words_file).title() + random.choice(random_symbols)
-    if random_number in [6,7]: # Chooses a password from the common passwords -list
+    elif random_number in [6,7]: # Chooses a password from the common passwords -list
         if random_number == 7: #first letter will be capitalized and a symbol will be added to the end
             return random.choice(common_passwords_list).title() + random.choice(random_symbols)
         else:
             return random.choice(common_passwords_list) # Only a random word from the common passwords list will be chosen
-    if random_number == 8: # A combination of firstname with first letter capitalized + two digits
+    elif random_number == 8: # A combination of firstname with first letter capitalized + two digits
         return random.choice(common_passwords_list) + name.title() + str(random.randrange(10,20))
-    if random_number == 9: # A random finnish word + 2 to 3 digits
+    elif random_number == 9: # A random finnish word + 2 to 3 digits
         return random.choice(finnish_words_file) + random.choice(random_symbols) + str(random.randrange(10,200))
-    if random_number == 10: # A random english word with first letter capitalized + 2 or 3 digits
+    elif random_number == 10: # A random english word with first letter capitalized + 2 or 3 digits
         return random.choice(common_english_words_list).title() + str(random.randrange(10,200)) + random.choice(random_symbols)
-    if random_number == 11: # name with one letter replaced + two to three random digits + a random symbol
+    elif random_number == 11: # name with one letter replaced + two to three random digits + a random symbol
         letter_to_replace = name[random.randrange(0, len(name))]
         return name.replace(letter_to_replace, letter_to_replace.upper()) + str(random.randrange(10,200)) + random.choice(random_symbols)
-    if random_number == 12: # A random english word without first letter capitalized + 2 or 3 digits
+    elif random_number == 12: # A random english word without first letter capitalized + 2 or 3 digits
         return random.choice(common_english_words_list) + str(random.randrange(10,200))
-    if random_number == 13: # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+    elif random_number == 13: # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
         letter_to_replace = name[random.randrange(0, len(name))]
         return name.replace(letter_to_replace, letter_to_replace.upper() + random.choice(random_symbols)) + str(random.randrange(10,200))
-    if random_number == 14:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
+    elif random_number == 14:  # A random letter in the name is replaced, two random symbols are added + a name is added to the end
         letter_to_replace = name[random.randrange(0, len(name))]
         return name.replace(letter_to_replace, random.choice(random_symbols) + random.choice(random_symbols)) + str(random.randrange(10, 200))
-    if random_number == 15:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
-        letter_to_replace = name[random.randrange(0, len(name))]
+    elif random_number == 15:  # Two random words are joined together + a symbol is added
         return random.choice(common_english_words_list) + random.choice(common_english_words_list) + random.choice(random_symbols)
-    if random_number == 16:  # A random letter is replaced from name + capitalized + a random symbol is added + digits added to the end
-        letter_to_replace = name[random.randrange(0, len(name))]
+    elif random_number == 16:  # An english word is joined with a finnish word in Caps, a random symbol is added to the end
         return random.choice(common_english_words_list) + random.choice(finnish_words_file).upper() + random.choice(random_symbols)
     else: # A random finnish word with first letter capitalized + 2 or 3 digits
         return random.choice(finnish_words_file).title() + str(random.randrange(10,200))
